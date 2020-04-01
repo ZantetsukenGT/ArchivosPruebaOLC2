@@ -62,28 +62,13 @@ multiply = (a,b)=>
         }
         i = i + 1;
     }
-
-    System.out.println("Matrix multiplication by regular method : ");
-    i = 1
-    while(i <= nrow(a))
-    {
-        j = 1;
-        while(j <= nrow(a))
-        {
-            System.out.print(c[i,j] + "\t");
-            j = j + 1
-        }
-        System.out.println("");
-        i = i + 1;
-    }
-
     return (c);
 }
 
 strassen = (a, b)=>
 {
     n = nrow(a);
-    result = matrix(1,n,n);
+    result = matrix(0,n,n);
 
     if((n%%2 != 0 ) & (n != 1))
     {
@@ -123,11 +108,11 @@ strassen = (a, b)=>
 
     if(n == 1)
     {
-	result[1,1] = a[1,1] * b[1,1];
+		result[1,1] = a[1,1] * b[1,1];
     }
     else
     {
-	A11 = matrix(0,n/2,n/2);
+		A11 = matrix(0,n/2,n/2);
         A12 = matrix(0,n/2,n/2);
         A21 = matrix(0,n/2,n/2);
         A22 = matrix(0,n/2,n/2);
@@ -137,15 +122,15 @@ strassen = (a, b)=>
         B21 = matrix(0,n/2,n/2);
         B22 = matrix(0,n/2,n/2);
 
-        divide(a, A11, 0 , 0);
-        divide(a, A12, 0 , n/2 );
-        divide(a, A21, n/2, 0);
-        divide(a, A22, n/2, n/2);
+        A11 = divide(a, A11, 0 , 0);
+        A12 = divide(a, A12, 0 , n/2 );
+        A21 = divide(a, A21, n/2, 0);
+        A22 = divide(a, A22, n/2, n/2);
 
-        divide(b, B11, 0 , 0);
-        divide(b, B12, 0 , n/2);
-        divide(b, B21, n/2, 0);
-        divide(b, B22, n/2, n/2);
+        B11 = divide(b, B11, 0 , 0);
+        B12 = divide(b, B12, 0 , n/2);
+        B21 = divide(b, B21, n/2, 0);
+        B22 = divide(b, B22, n/2, n/2);
 
         P1 = strassen(add(A11, A22), add(B11, B22));
         P2 = strassen(add(A21, A22), B11);
@@ -160,10 +145,16 @@ strassen = (a, b)=>
         C21 = add(P2, P4);
         C22 = add(sub(add(P1, P3), P2), P6);
 
-        copy(C11, result, 0 , 0);
-        copy(C12, result, 0 , n/2);
-        copy(C21, result, n/2, 0);
-        copy(C22, result, n/2, n/2);
+		result1 = result;
+		result2 = result;
+		result3 = result;
+		result4 = result;
+
+        result1 = copy(C11, result1, 0 , 0);
+        result2 = copy(C12, result2, 0 , n/2);
+        result3 = copy(C21, result3, n/2, 0);
+        result4 = copy(C22, result4, n/2, n/2);
+		result = result1 + result2 + result3 + result4
     }
 
    ## printM(result);
@@ -227,6 +218,7 @@ divide = (p1, c1, iB, jB)=>
         i1 = i1 + 1;
         i2 = i2 + 1
     }
+	return (c1);
 }
 
 copy = function(c1, p1, iB, jB)
@@ -246,6 +238,7 @@ copy = function(c1, p1, iB, jB)
         i1 = i1 + 1;
         i2 = i2 + 1;
     }
+	return (p1)
 }
 
 
@@ -288,8 +281,10 @@ print("MATRIZ B \n")
    printM(b)*#
    print("Strassen");
    arr = strassen(a,b);
-   printM(arr)
+   print(arr)
+   System.out.println("Matrix multiplication by regular method : ");
    arr2 = multiply(a,b);
+   print(arr2)
    System.out.println("-------- TAUTOLOGIA? ----------");
    print("\n")
    print(arr == arr2)
